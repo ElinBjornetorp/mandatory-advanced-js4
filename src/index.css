@@ -1,0 +1,38 @@
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
+    monospace;
+}
+
+/* My CSS */
+
+.board-container {
+  display: flex;
+}
+
+.board {
+  display: flex;
+  width: 210px;
+  margin: 20px;
+  border: 1px solid black;
+  background-color: blue;
+}
+
+.reset-button {
+  height: 100%;
+  margin-top: 20px;
+}
+
+.column {
+  display: flex;
+  flex-direction: column;
+}
+
+.cell {
+  width: 30px;
+  height: 30px;
+  border: 1px solid black;
+  border-radius: 30px;
+  box-sizing: border-box;
+  background-color: white;
+}
