@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import './App.css';
 import {useState} from 'react';
 import {useEffect} from 'react';
@@ -27,21 +27,99 @@ function App() {
   function checkWinner() {
     //OBS Do not change state 'boardColors' in this function. Will create an endless loop.
 
-    console.log('Checking for winner');
-    console.log('boardColors:');
-    console.log(boardColors);
-    console.log('turnsPlayed:');
-    console.log(turnsPlayed);
+    //Defining variables
+    let startCol;
+    let col2;
+    let col3;
+    let col4;
+    let cell1;
+    let cell2;
+    let cell3;
+    let cell4;
 
     //Starting to check for a winner after 7 turns
     if(turnsPlayed > 6) {
       // 1: Checking horizonally
       // Outer loop - looping through columns 1-4
       for(let i = 0; i <= 3; i++) {
-        let startCol = boardColors[i];
-        let col2 = boardColors[i+1];
-        let col3 = boardColors[i+2];
-        let col4 = boardColors[i+3];
+        startCol = boardColors[i];
+        col2 = boardColors[i+1];
+        col3 = boardColors[i+2];
+        col4 = boardColors[i+3];
+
+        // Inner loop - looping through cells 4 and 4 horizonally
+        for(let j = 0; j <= 5; j++) {
+
+          cell1 = startCol[j];
+          cell2 = col2[j];
+          cell3 = col3[j];
+          cell4 = col4[j];
+
+          if(cell1 === currentPlayer && cell2 === cell1 && cell3 === cell1 && cell4 === cell1) {
+            console.log(currentPlayer + ' player won!');
+          }
+        }
+      }
+
+      // 2: Checking vertically
+      // Outer loop - looping through all columns
+      for(let column of boardColors) {
+        // Inner loop - looping through cells 4 and 4 vertically
+        for(let i = 0; i <= 2; i++) {
+
+          cell1 = column[i];
+          cell2 = column[i+1];
+          cell3 = column[i+2];
+          cell4 = column[i+3];
+
+          if(cell1 === currentPlayer && cell2 === cell1 && cell3 === cell1 && cell4 === cell1) {
+            console.log(currentPlayer + ' player won!');
+          }
+        }
+      }
+
+      // 3: Checking diagonally - down-to-right
+      // Outer loop - looping through rows 1-3
+      for(let i = 0; i <= 2; i++) {
+        //Inner loop - looping through columns 1-4
+        for(let j = 0; j <= 3; j++) {
+
+          startCol = boardColors[j];
+          col2 = boardColors[j+1];
+          col3 = boardColors[j+2];
+          col4 = boardColors[j+3];
+
+          cell1 = startCol[i];
+          cell2 = col2[i+1];
+          cell3 = col3[i+2];
+          cell4 = col4[i+3];
+
+          if(cell1 === currentPlayer && cell2 === cell1 && cell3 === cell1 && cell4 === cell1) {
+            console.log(currentPlayer + ' player won!');
+          }
+        }
+      }
+
+      // 4: Checking diagonally - up-to-right
+      // Outer loop - looping through rows 4-6
+      for(let i = 3; i <= 5; i++) {
+        // Inner loop - looping through columns 1-4
+        for(let j = 0; j <= 3; j++) {
+
+          startCol = boardColors[j];
+          col2 = boardColors[j+1];
+          col3 = boardColors[j+2];
+          col4 = boardColors[j+3];
+
+          cell1 = startCol[i];
+          cell2 = col2[i-1];
+          cell3 = col3[i-2];
+          cell4 = col4[i-3];
+
+          if(cell1 === currentPlayer && cell2 === cell1 && cell3 === cell1 && cell4 === cell1) {
+            console.log(currentPlayer + ' player won!');
+          }
+        }
       }
     }
 
