@@ -18,14 +18,18 @@ let currentPlayer = 'yellow';
 //Creating a variable for counting turns
 let turnsPlayed = 0;
 
+// ------------ Function component: App ------------------------
 function App() {
+  //States :)
   let [boardColors, updateBoardColors] = useState(emptyArray); //Board colors is an array of 7 arrays, each one containing 6 values.
+  let [winner, updateWinner] = useState(undefined);
+  let [draw, updateDraw] = useState(false);
 
   //When boardColors is changed, check for a winner
   useEffect(checkWinner, [boardColors]);
 
   function checkWinner() {
-    //OBS Do not change state 'boardColors' in this function. Will create an endless loop.
+    //Att: Do not change state 'boardColors' in this function. Will create an endless loop.
 
     //Defining variables
     let startCol;
@@ -56,7 +60,8 @@ function App() {
           cell4 = col4[j];
 
           if(cell1 === currentPlayer && cell2 === cell1 && cell3 === cell1 && cell4 === cell1) {
-            console.log(currentPlayer + ' player won!');
+            updateWinner(currentPlayer);
+            return;
           }
         }
       }
@@ -73,7 +78,8 @@ function App() {
           cell4 = column[i+3];
 
           if(cell1 === currentPlayer && cell2 === cell1 && cell3 === cell1 && cell4 === cell1) {
-            console.log(currentPlayer + ' player won!');
+            updateWinner(currentPlayer);
+            return;
           }
         }
       }
@@ -95,7 +101,8 @@ function App() {
           cell4 = col4[i+3];
 
           if(cell1 === currentPlayer && cell2 === cell1 && cell3 === cell1 && cell4 === cell1) {
-            console.log(currentPlayer + ' player won!');
+            updateWinner(currentPlayer);
+            return;
           }
         }
       }
@@ -117,14 +124,20 @@ function App() {
           cell4 = col4[i-3];
 
           if(cell1 === currentPlayer && cell2 === cell1 && cell3 === cell1 && cell4 === cell1) {
-            console.log(currentPlayer + ' player won!');
+            updateWinner(currentPlayer);
+            return;
           }
         }
       }
     }
 
+    //If there was no winner and all 42 rounds are played, declare a draw
+    if(turnsPlayed === 42) {
+      updateDraw(true);
+    }
+
     //Change player
-    if(turnsPlayed > 0) { //Checking if any turns are played (no need to change player on 'componentDidMount').
+    if(turnsPlayed > 0) { //Checking if any turns are played (no need to change player on 'componentDidMount' or when a game is restarted).
       if(currentPlayer === 'yellow') {
         currentPlayer = 'red';
       }
@@ -135,6 +148,12 @@ function App() {
   }
 
   function onClickAddDisc(event) {
+    //If there is a winner or the board is already filled (=draw), do nothing
+    if(winner || draw) {
+      return;
+    }
+
+    //Creating variables
     let id = event.target.id;
     let columnNr = parseInt(id.charAt(6));
     let index = columnNr - 1;
@@ -178,13 +197,19 @@ function App() {
     //Creating a copy of 'boardColors' to work with
     let newBoard = boardColors.slice();
 
-    //Setting all values in new board to null
+    //Setting all values in newBoard to null
     for(let array of newBoard) {
       array.fill(null);
     }
 
     //Updating state:boardColors
     updateBoardColors(newBoard);
+
+    //Resetting states and variables
+    updateWinner(undefined);
+    updateDraw(false);
+    currentPlayer = 'yellow';
+    turnsPlayed = 0;
   }
 
   return (
@@ -192,7 +217,9 @@ function App() {
       <div className="board-container">
         <Board className="board" boardColors={boardColors} onClickAddDisc={onClickAddDisc}/>
         <ResetButton className="reset-button" onClickReset={onClickReset}/>
-      </div>
+      </div> <br/>
+      {winner ? <WinnerMessage winningColor={winner}/> : null}
+      {draw ? <DrawMessage/> : null}
     </div>
   );
 }
